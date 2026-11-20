@@ -1,0 +1,12 @@
+---
+- name: Enterprise Linux Hardening
+  hosts: all
+  become: true
+  roles:
+    - ssh_hardening
+    - firewall_cofiguration
+    - disable_unnecessary_service
+    - selinux_hardening
+    - password_policy
+    - secure_file_permission
+    - security_validation

@@ -1,0 +1,10 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for password_policy
+password_policy:
+  - key: "PASS_MAX_DAYS"
+    value: 90
+  - key: "PASS_MIN_DAYS"
+    value: 1
+  - key: "PASS_WARN_AGE"
+    value: 7

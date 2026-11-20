@@ -1,0 +1,11 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for ssh_hardening
+- name: ssh hardening
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?{{ item.key }}\\s+"
+    line: "{{ item.key }} {{ item.value }}"
+    validate: "/usr/sbin/sshd -t -f %s"
+  loop: "{{ ssh_config }}"
+  notify: restart sshd

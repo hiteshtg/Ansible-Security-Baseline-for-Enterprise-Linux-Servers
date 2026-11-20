@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for disable_unnecessary_service
+unnecessary_services:
+  - avahi-daemon
+  - cups
+  - rpcbind

@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for password_policy
+- name: configure password expiration
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: "^{{ item.key }}"
+    line: "{{ item.key }} {{ item.value }}"
+  loop: "{{ password_policy }}"

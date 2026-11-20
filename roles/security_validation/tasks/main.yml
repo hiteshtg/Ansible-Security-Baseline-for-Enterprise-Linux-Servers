@@ -1,0 +1,21 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for security_validation
+- name: verify selinux is enforcing
+  ansible.builtin.command:
+    cmd: getenforce
+  register: selinux_status
+  changed_when: false
+  failed_when: selinux_status.stdout != "Enforcing"
+
+- name: check ssh root login restriction
+  ansible.builtin.command:
+    cmd: sshd -T
+  register: ssh_effective_config
+  changed_when: false
+  failed_when: >
+    'permitrootlogin no' not in ssh_effective_config.stdout
+
+- name: Display security validation result
+  ansible.builtin.debug:
+    msg: "Basic security configuration validation completed."

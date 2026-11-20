@@ -1,0 +1,11 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for firewall_cofiguration
+allowed_firewall_ports:
+  - "{{ ssh_port }}/tcp"
+  - "80/tcp"
+  - "443/tcp"
+
+blocked_firewall_ports:
+  - "8080/tcp"
+  - "9090/tcp"
