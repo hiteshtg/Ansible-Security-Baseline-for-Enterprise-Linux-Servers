@@ -1,0 +1,157 @@
+#+TITLE: Ansible Security Baseline for Enterprise Linux Servers
+#+AUTHOR: Hitesh Sharma
+
+* Overview
+
+An Ansible automation project designed to apply and validate a baseline set of security configurations across Enterprise Linux servers.
+
+The project uses a role-based structure to automate security hardening tasks, reduce manual configuration effort, and maintain consistent security settings across multiple environments.
+
+* Objectives
+
+- Automate SSH security configuration.
+- Configure host-based firewall rules.
+- Disable unnecessary system services.
+- Enforce SELinux security settings.
+- Apply password policy configurations.
+- Secure sensitive system file permissions.
+- Validate security configurations after applying changes.
+- Manage multiple servers through Ansible inventory groups.
+
+* Security Controls
+
+The main playbook applies the following roles:
+
+| Role                        | Responsibility                                                                          |
+|-----------------------------+-----------------------------------------------------------------------------------------|
+| ssh_hardening               | Manage SSH daemon security settings and restrict insecure remote access configurations. |
+| firewall_cofiguration       | Configure firewall rules to control network access to servers.                          |
+| disable_unnecessary_service | Identify and disable unnecessary system services.                                       |
+| selinux_hardening           | Configure and enforce SELinux security settings.                                        |
+| password_policy             | Apply password-related security policies.                                               |
+| secure_file_permission      | Set appropriate permissions on sensitive system files.                                  |
+| security_validation         | Verify selected security configurations after hardening.                                |
+
+* Project Structure
+
+#+BEGIN_SRC text
+.
+├── collections/
+├── roles/
+├── facts/
+├── inventory
+├── ansible.cfg
+├── security_hardening.yml
+└── README.org
+#+END_SRC
+
+* Inventory Design
+
+The inventory separates servers into logical environments and groups.
+
+#+BEGIN_SRC ini
+[dev]
+node1
+
+[test]
+node2
+
+[prod]
+node3
+node4
+
+[balancers]
+node5
+
+[webservers:children]
+prod
+#+END_SRC
+
+This structure allows the playbook to target individual environments or groups of servers.
+
+* Technologies Used
+
+- Ansible
+- Red Hat Enterprise Linux / Enterprise Linux
+- YAML
+- Linux system administration
+- OpenSSH
+- firewalld
+- SELinux
+- Git
+
+* Prerequisites
+
+- Ansible installed on the control node.
+- SSH connectivity to managed hosts.
+- Privilege escalation permissions on managed hosts.
+- Python available on managed hosts.
+- Required Ansible collections installed.
+
+Install the required collections:
+
+#+BEGIN_SRC bash
+ansible-galaxy collection install -r collections/requirements.yml
+#+END_SRC
+
+* Configuration and Execution
+
+** 1. Clone the repository
+
+#+BEGIN_SRC bash
+git clone https://github.com/hiteshtg/Ansible-Security-Baseline-for-Enterprise-Linux-Servers.git
+
+cd Ansible-Security-Baseline-for-Enterprise-Linux-Servers
+#+END_SRC
+
+** 2. Configure inventory
+
+Update the =inventory= file with the IP addresses or hostnames of your managed servers.
+
+Ensure SSH access and privilege escalation are configured correctly.
+
+** 3. Validate the playbook
+
+#+BEGIN_SRC bash
+ansible-playbook -i inventory security_hardening.yml --syntax-check
+#+END_SRC
+
+** 4. Test connectivity
+
+#+BEGIN_SRC bash
+ansible all -i inventory -m ping
+#+END_SRC
+
+** 5. Execute the hardening playbook
+
+#+BEGIN_SRC bash
+ansible-playbook -i inventory security_hardening.yml
+#+END_SRC
+
+To target a specific environment:
+
+#+BEGIN_SRC bash
+ansible-playbook -i inventory security_hardening.yml --limit prod
+#+END_SRC
+
+* Validation
+
+The project includes a security validation role intended to check selected configurations after the hardening tasks have been applied.
+
+Validation should include:
+
+- SELinux operating in enforcing mode.
+- SSH daemon configuration matching the intended security policy.
+- Firewall rules matching the required network access policy.
+- Unnecessary services disabled.
+- Sensitive files having appropriate permissions.
+
+* Important Considerations
+
+- Test changes in a development or test environment before applying them to production servers.
+- Review firewall rules before deployment to avoid interrupting legitimate network access.
+- Keep a backup of important configuration files before modifying them.
+- Verify SSH access and configuration before restarting the SSH service.
+- Security settings should be adapted to the requirements of the target environment.
+
+This project provides a configurable security baseline. It does not independently establish compliance with a particular regulatory framework or guarantee that a server is completely secure.
